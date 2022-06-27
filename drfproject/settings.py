@@ -36,8 +36,8 @@ SECRET_KEY = 'django-insecure-vrky!ipw-$=^r+&l!zd4v5m8**px6omk6@c*kf!(tc4qk!!5t2
 # ALLOWED_HOSTS = []
 DEBUG = False
 
-#ALLOWED_HOSTS = ['localhost','127.0.0.1','drfproject.heroku.com']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','nikesh-deploy.heroku.com']
+
 
 # Application definition
 
