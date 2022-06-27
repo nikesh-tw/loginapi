@@ -12,8 +12,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku #new
+from django.core.wsgi import get_wsgi_application
+
+
 import dj_database_url #new
+import django_heroku #new
+from datetime import timedelta
+#from whitenoise.django import DjangoWhiteNoise
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +36,8 @@ SECRET_KEY = 'django-insecure-vrky!ipw-$=^r+&l!zd4v5m8**px6omk6@c*kf!(tc4qk!!5t2
 # ALLOWED_HOSTS = []
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','drfproject.heroku.com']
+#ALLOWED_HOSTS = ['localhost','127.0.0.1','drfproject.heroku.com']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -41,10 +47,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'myapp',
-    'rest_framework',
-    'whitenoise.runserver_nostatic',#for static files
+    'rest_framework',    
 ]
 
 REST_FRAMEWORK = {
@@ -53,15 +59,22 @@ REST_FRAMEWORK = {
     ],
 }
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS':False,
+}
+
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
     
 ]
 WHITENOISE_USE_FINDERS = True
@@ -87,7 +100,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'drfproject.wsgi.application'
 
-
+#FILE_CHARSET =""
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -148,11 +161,25 @@ DEFAULT_AUTO_FIELD="django.db.models.BigAutoField"
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
+
+
+
+
+#STATIC_ROOT = BASE_DIR/'static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'drfproject/static')
+
+
+
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "drfproject.settings")
+
+application = get_wsgi_application()
+#application = DjangoWhiteNoise(application)
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
-
