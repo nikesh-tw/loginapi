@@ -1,1 +1,0 @@
-drf app using simple jwt token authentication

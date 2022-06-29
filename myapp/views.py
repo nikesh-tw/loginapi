@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 # #Register Api
 class RegisterApi(APIView):
 
+    def get(self,request,format=None):
+        return Response("welcome")
+
     def post(self,request):
         try:
 
